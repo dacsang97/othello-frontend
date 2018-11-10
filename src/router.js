@@ -24,13 +24,6 @@ export default new Router({
         import(/* webpackChunkName: "about" */ './views/About.vue'),
     },
     {
-      path: '/mode',
-      name: 'mode',
-      component: () =>
-        import(/* webpackChunkName: "mode" */ './views/Mode.vue'),
-      beforeEnter: requireAuth,
-    },
-    {
       path: '/game',
       name: 'game',
       component: () =>

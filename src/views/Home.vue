@@ -4,7 +4,9 @@
     <b-container>
       <b-row>
         <b-col class="text-center">
-          <b-button v-b-modal.modal1 variant="primary">Play Game</b-button>
+          <b-button block v-b-modal.modal1>SINGLE COMPUTER GAME</b-button>
+          <b-button block>CREATE ROOM GAME</b-button>
+          <b-button block>JOIN EXISTS ROOM</b-button>
           <b-modal
             ref="modal"
             id="modal1"
@@ -14,8 +16,12 @@
           >
             <form @submit.stop.prevent="handleSubmit">
               <b-form-group>
-                <label>Enter your name</label>
-                <b-form-input v-model="name" />
+                <label>Player 1</label>
+                <b-form-input v-model="name1" />
+              </b-form-group>
+              <b-form-group>
+                <label>Player 2</label>
+                <b-form-input v-model="name2" />
               </b-form-group>
             </form>
           </b-modal>
@@ -33,31 +39,35 @@ export default {
   name: 'home',
   data() {
     return {
-      name: '',
+      name1: '',
+      name2: '',
     }
   },
   methods: {
     ...mapActions({
-      playGame: types.PLAY_GAME,
+      player1: types.PLAYER_1,
+      player2: types.PLAYER_2,
     }),
     clearName() {
-      this.name = ''
+      this.name1 = ''
+      this.name2 = ''
     },
     handleOk(evt) {
       evt.preventDefault()
-      if (!this.name) {
-        alert('Please enter your name')
+      if (!this.name1 || !this.name2) {
+        alert('Please enter player name')
       } else {
         this.handleSubmit()
       }
     },
     handleSubmit() {
-      if (!this.name) {
-        alert('Please enter your name')
+      if (!this.name1 || !this.name2) {
+        alert('Please enter player name')
       } else {
-        this.playGame(this.name)
+        this.player1(this.name1)
+        this.player2(this.name2)
         this.$refs.modal.hide()
-        this.$router.push('/mode')
+        this.$router.push('/game')
       }
     },
   },

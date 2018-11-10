@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js'
 import * as TWEEN from '@tweenjs/tween.js'
 
 export default class Tile {
@@ -40,6 +39,65 @@ export default class Tile {
         2400 + Math.random() * 1200,
       )
       .easing(TWEEN.Easing.Elastic.Out)
+      .start()
+  }
+
+  flip = color => {
+    this.color = color
+
+    // disable the player from clicking the tile while it is animating
+    let tempMouseDown = this.sprite.mousedown
+    this.sprite.mousedown = null
+
+    if (this.color === 'white') {
+      new TWEEN.Tween(this.sprite)
+        .to({ width: 0.0, x: '+32' }, 300)
+        .easing(TWEEN.Easing.Linear.None)
+        .onComplete(() => {
+          this.sprite.tint = 0xffffff
+        })
+        .chain(
+          new TWEEN.Tween(this.sprite)
+            .to({ alpha: 1.0, width: 64, x: '-32' }, 300)
+            .easing(TWEEN.Easing.Linear.None)
+            .onComplete(() => {
+              this.sprite.mousedown = tempMouseDown
+            }),
+        )
+        .start()
+    } else {
+      new TWEEN.Tween(this.sprite)
+        .to({ width: 0.0, x: '+32' }, 300)
+        .easing(TWEEN.Easing.Linear.None)
+        .onComplete(() => {
+          this.sprite.tint = 0x000000
+        })
+        .chain(
+          new TWEEN.Tween(this.sprite)
+            .to({ alpha: 0.9, width: 64, x: '-32' }, 300)
+            .easing(TWEEN.Easing.Linear.None)
+            .onComplete(() => {
+              this.sprite.mousedown = tempMouseDown
+            }),
+        )
+        .start()
+    }
+  }
+
+  noFlipAnimate = () => {
+    let tempMouseDown = this.sprite.mousedown
+
+    this.sprite.mousedown = null
+
+    new TWEEN.Tween(this.sprite)
+      .to({ x: '+6' }, 50)
+      .chain(
+        new TWEEN.Tween(this.sprite).to({ x: '-12' }, 50).chain(
+          new TWEEN.Tween(this.sprite).to({ x: '+6' }, 50).onComplete(() => {
+            this.sprite.mousedown = tempMouseDown
+          }),
+        ),
+      )
       .start()
   }
 }

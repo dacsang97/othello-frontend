@@ -1,3 +1,7 @@
-export const SET_NAME = 'SET_NAME'
+export const SET_NAME_1 = 'SET_NAME_1'
 
-export const PLAY_GAME = 'PLAY_GAME'
+export const SET_NAME_2 = 'SET_NAME_2'
+
+export const PLAYER_1 = 'PLAYER_1'
+
+export const PLAYER_2 = 'PLAYER_2'
