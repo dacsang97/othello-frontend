@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "express": "vue-cli-service express:watch",
+    "express:run": "vue-cli-service express:run"
   },
   "dependencies": {
     "register-service-worker": "^1.0.0",
@@ -24,6 +26,7 @@
     "eslint-plugin-vue": "^5.0.0-0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "vue-cli-plugin-express": "^0.0.4",
     "vue-template-compiler": "^2.5.17"
   }
 }
