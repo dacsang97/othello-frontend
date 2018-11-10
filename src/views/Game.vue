@@ -26,6 +26,7 @@ export default {
       gameArea: null,
       grid: null,
       container: null,
+      turn: -1,
       PIXIWrapper: {
         // Expose PIXI and the created app to all descendants.
         PIXI,
@@ -50,7 +51,7 @@ export default {
         view: this.gameArea,
         backgroundColor: 0x888888,
       })
-      this.grid = new Grid(8, this.PIXIWrapper.PIXIApp)
+      this.grid = new Grid(8, this.PIXIWrapper.PIXIApp, this)
       this.grid.initBoard()
       this.animate()
     },
