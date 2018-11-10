@@ -11,7 +11,9 @@
     "express:run": "vue-cli-service express:run"
   },
   "dependencies": {
+    "@tweenjs/tween.js": "^17.2.0",
     "bootstrap-vue": "^2.0.0-rc.11",
+    "pixi.js": "^4.8.2",
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",

@@ -6,7 +6,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    name: '',
+    name: 'sang',
   },
   getters: {
     name: s => s.name,
