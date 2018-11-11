@@ -65,11 +65,16 @@ function playerJoinGame(data) {
 
   // If the room exists
   let roomIds = rooms.map(room => room.id)
+  console.log(roomIds)
   if (roomIds.includes(data.gameId)) {
     console.log('Room is found.')
-
     const room = rooms.find(room => room.id)
     const playerNum = room.players.length
+    const inRoom = room.players.map(player => player.id).includes(this.id)
+
+    if (inRoom) {
+      return this.emit('inRoom')
+    }
 
     if (playerNum === 1) {
       this.join(data.gameId)
@@ -84,10 +89,10 @@ function playerJoinGame(data) {
       })
       io.sockets.in(data.gameId).emit('playerJoinedRoom', room)
     } else {
-      this.emit('error', { message: 'This room is full' })
+      this.emit('errMess', { message: 'This room is full' })
     }
   } else {
-    this.emit('error', { message: 'This room does not exist.' })
+    this.emit('errMess', { message: 'This room does not exist.' })
   }
 }
 

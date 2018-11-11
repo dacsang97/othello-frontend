@@ -7,7 +7,7 @@
             <b-button @click="createNewGame" :disabled="!!gameId">
               CREATE ROOM GAME
             </b-button>{{ ' ' }}
-            <b-button>JOIN EXISTS ROOM</b-button>
+            <b-button v-b-modal.modal>JOIN EXISTS ROOM</b-button>
           </div>
           <h1>Hello {{ name1 }}</h1>
         </div>
@@ -29,6 +29,20 @@
         </b-card>
       </b-col>
     </b-row>
+    <b-modal
+      ref="modal"
+      id="modal"
+      title="Join Game"
+      @ok="handleOk"
+      @shown="clearId"
+    >
+      <form @submit.stop.prevent="handleSubmit">
+        <b-form-group>
+          <label>Enter room ID</label>
+          <b-form-input v-model="roomId" />
+        </b-form-group>
+      </form>
+    </b-modal>
   </b-container>
 </template>
 
@@ -40,8 +54,9 @@ export default {
   data() {
     return {
       rooms: [],
-      gameId: null,
       socketId: null,
+      roomId: null,
+      gameId: null,
     }
   },
   computed: {
@@ -59,6 +74,7 @@ export default {
     socket.on('updateListRooms', this.updateRooms)
     socket.on('newGameCreated', this.updateInformation)
     socket.on('playerJoinedRoom', this.playerJoinedRoom)
+    socket.on('inRoom', this.inRoom)
   },
   methods: {
     ...mapMutations({
@@ -83,7 +99,6 @@ export default {
       this.updateRooms(data)
     },
     updateRooms({ rooms }) {
-      console.log('co update')
       this.rooms = rooms
     },
     updateInformation({ gameId, socketId }) {
@@ -96,6 +111,32 @@ export default {
       this.player1(players[0].name)
       this.player2(players[1].name)
       this.$router.push('/game')
+    },
+    clearId() {
+      this.roomId = ''
+    },
+    handleOk(evt) {
+      evt.preventDefault()
+      if (!this.roomId) {
+        alert('Please enter room ID')
+      } else {
+        this.handleSubmit()
+      }
+    },
+    handleSubmit() {
+      if (!this.roomId) {
+        alert('Please enter room ID')
+      } else {
+        try {
+          const id = Number.parseInt(this.roomId)
+          this.joinGame(id)
+        } catch (e) {
+          alert('The room ID invalid')
+        }
+      }
+    },
+    inRoom() {
+      alert('You are here !!!')
     },
   },
 }
