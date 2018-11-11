@@ -109,6 +109,12 @@ function playerJoinGame(data) {
         name: data.name,
       }
       room.players.push(player)
+      // remove all room this created
+      const listR = rooms.filter(room => room.players[0].id === this.id)
+      listR.forEach(room => {
+        this.leave(room.id)
+      })
+      rooms = rooms.filter(room => room.players[0].id !== this.id)
       io.emit('updateListRooms', {
         rooms,
       })
