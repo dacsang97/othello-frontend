@@ -10,19 +10,45 @@ exports.initGame = function(sio, socket) {
     rooms,
   })
 
+  io.emit('updateListRooms', {
+    rooms,
+  })
+
   gameSocket.on('hostCreateNewGame', hostCreateNewGame)
   gameSocket.on('disconnect', onDisconnect)
+  gameSocket.on('getInfo', () => {
+    gameSocket.emit('connected', {
+      message: 'You are connected!',
+      rooms,
+    })
+  })
   // Player Events
   gameSocket.on('playerJoinGame', playerJoinGame)
   gameSocket.on('newMove', newMove)
+  gameSocket.on('surrender', surrender)
+  gameSocket.on('exit', exitRoom)
   gameSocket.on('gameOver', gameOver)
 }
 
 function onDisconnect() {
-  console.log(this.id)
   rooms = rooms.filter(room => room.players[0].id !== this.id)
   io.emit('updateListRooms', {
     rooms,
+  })
+}
+
+function exitRoom(data) {
+  io.sockets.in(data.gameId).emit('exit')
+}
+
+function surrender(data) {
+  const room = rooms.find(room => room.id === data.gameId)
+
+  io.sockets.in(data.gameId).emit('surrender', {
+    win: room.players[data.win - 1].name,
+  })
+  io.sockets.clients(data.gameId).forEach(client => {
+    client.leave(data.gameId)
   })
 }
 
@@ -47,12 +73,11 @@ function hostCreateNewGame(data) {
     ...data,
   })
 
+  // Join the Room and wait for the players
+  this.join(thisGameId.toString())
   io.emit('updateListRooms', {
     rooms,
   })
-
-  // Join the Room and wait for the players
-  this.join(thisGameId.toString())
 }
 
 function playerJoinGame(data) {
@@ -68,7 +93,7 @@ function playerJoinGame(data) {
   console.log(roomIds)
   if (roomIds.includes(data.gameId)) {
     console.log('Room is found.')
-    const room = rooms.find(room => room.id)
+    const room = rooms.find(room => room.id === data.gameId)
     const playerNum = room.players.length
     const inRoom = room.players.map(player => player.id).includes(this.id)
 

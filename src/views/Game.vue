@@ -3,8 +3,21 @@
     <b-container>
       <b-row>
         <b-col md="8" class="text-center">
-          <canvas ref="game"></canvas>
-          <div id="gameMessage">{{ message }}</div>
+          <div
+            class="game-tool d-flex mb-2 align-items-center justify-content-between"
+          >
+            <div id="gameMessage">{{ message }}</div>
+            <div>
+              <b-button @click="surrender">Surrender</b-button>{{ ' ' }}
+              <b-button @click="exit">Exit Room</b-button>
+            </div>
+          </div>
+          <div class="game-area">
+            <canvas ref="game"></canvas>
+            <div :class="['message', { show: win }]">
+              <h1>{{ win }} won !!!</h1>
+            </div>
+          </div>
         </b-col>
         <b-col md="4">
           <b-row>
@@ -35,7 +48,8 @@
 import Vue from 'vue'
 import * as PIXI from 'pixi.js'
 import * as TWEEN from '@tweenjs/tween.js'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import * as types from '../store/types'
 import Grid from '../model/grid'
 
 export default {
@@ -71,6 +85,9 @@ export default {
     this.startGame()
   },
   methods: {
+    ...mapActions({
+      player1: types.PLAYER_1,
+    }),
     startGame() {
       this.PIXIWrapper.PIXIApp = new PIXI.Application(640, 640, {
         view: this.gameArea,
@@ -80,6 +97,27 @@ export default {
       this.grid.initBoard()
       this.animate()
       this.$io.socket.on('newMove', this.newMove)
+      this.$io.socket.on('surrender', ({ win }) => {
+        this.win = win
+      })
+      this.$io.socket.on('exit', () => {
+        if (this.playerNum === 2) {
+          this.player1(this.name2)
+        }
+        this.$router.push('/room')
+      })
+    },
+    surrender() {
+      if (this.playerNum === 0) {
+        if (this.turn === 'white') this.win = this.name2
+        else this.win = this.name1
+      } else {
+        const win = this.playerNum === 1 ? 2 : 1
+        this.$io.surrender({
+          win,
+          gameId: this.gameId,
+        })
+      }
     },
     sendMove(data) {
       this.$io.sendMove({
@@ -100,6 +138,15 @@ export default {
     animate() {
       requestAnimationFrame(this.animate)
       TWEEN.update()
+    },
+    exit() {
+      if (this.playerNum === 0) {
+        this.$router.push('/')
+      } else {
+        this.$io.exit({
+          gameId: this.gameId,
+        })
+      }
     },
   },
 }
@@ -144,6 +191,34 @@ export default {
 
   &.active {
     background: #ffba5a;
+  }
+}
+
+.game-area {
+  position: relative;
+  background: #888;
+
+  .message {
+    opacity: 0;
+    display: none;
+    background: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in;
+
+    h1 {
+      color: #fff;
+    }
+
+    &.show {
+      display: flex;
+      opacity: 1;
+    }
   }
 }
 </style>

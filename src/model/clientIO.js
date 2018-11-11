@@ -17,4 +17,12 @@ export default class ClientIO {
   sendMove = data => {
     this.socket.emit('newMove', data)
   }
+
+  surrender = data => {
+    this.socket.emit('surrender', data)
+  }
+
+  exit = data => {
+    this.socket.emit('exit', data)
+  }
 }

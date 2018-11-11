@@ -70,11 +70,14 @@ export default {
   },
   mounted() {
     const { socket } = this.$io
+
     socket.on('connected', this.connected)
     socket.on('updateListRooms', this.updateRooms)
     socket.on('newGameCreated', this.updateInformation)
     socket.on('playerJoinedRoom', this.playerJoinedRoom)
     socket.on('inRoom', this.inRoom)
+
+    socket.emit('getInfo')
   },
   methods: {
     ...mapMutations({
