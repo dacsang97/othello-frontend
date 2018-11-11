@@ -101,7 +101,7 @@ function playerJoinGame(data) {
       return this.emit('inRoom')
     }
 
-    if (playerNum === 1) {
+    if (playerNum !== 2) {
       this.join(data.gameId)
       console.log('Player ' + data.playerName + ' joining game: ' + data.gameId)
       const player = {

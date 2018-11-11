@@ -3,6 +3,10 @@ import io from 'socket.io-client'
 export default class ClientIO {
   constructor() {
     this.socket = io('http://localhost:4200')
+
+    this.socket.on('errMess', ({ message }) => {
+      alert(message)
+    })
   }
 
   createGame = name => {
