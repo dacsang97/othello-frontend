@@ -7,9 +7,9 @@ export default class Grid {
     this.size = size
     this.container = container
     this.gm = gameManager
-
+    console.log({ playerNum })
     // 0 for single, 1 for multi-player white, 2 for multi-player black
-    this.playerNum = 0
+    this.playerNum = playerNum
 
     this.isMulti = playerNum !== 0
 
@@ -60,6 +60,7 @@ export default class Grid {
   }
 
   makeMove = (x, y, isOwnMove) => {
+    console.log({ turn: this.isTurn })
     if (!this.isTurn && isOwnMove) return
     let moveColor = this.current
     console.log('move color: ' + moveColor)
@@ -214,7 +215,6 @@ export default class Grid {
         else if (this.grid[i][j].color === 'black') black++
       }
     }
-    console.log({ white, black })
     return {
       white,
       black,

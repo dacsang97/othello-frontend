@@ -58,7 +58,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name1', 'name2']),
+    ...mapGetters(['name1', 'name2', 'playerNum', 'gameId']),
   },
   provide() {
     return {
@@ -76,9 +76,26 @@ export default {
         view: this.gameArea,
         backgroundColor: 0x888888,
       })
-      this.grid = new Grid(8, this.PIXIWrapper.PIXIApp, this)
+      this.grid = new Grid(8, this.PIXIWrapper.PIXIApp, this, this.playerNum)
       this.grid.initBoard()
       this.animate()
+      this.$io.socket.on('newMove', this.newMove)
+    },
+    sendMove(data) {
+      this.$io.sendMove({
+        ...data,
+        gameId: this.gameId,
+        playerNum: this.playerNum,
+      })
+    },
+    newMove(data) {
+      console.log('SocketClient: newMove received')
+      if (this.playerNum !== data.playerNum) {
+        this.receiveMove(data)
+      }
+    },
+    receiveMove(data) {
+      this.grid.makeMove(data['move'][0], data['move'][1], false)
     },
     animate() {
       requestAnimationFrame(this.animate)

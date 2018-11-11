@@ -1,13 +1,14 @@
-import express from 'express';
+import express from 'express'
+import http from 'http'
+import socketIO from 'socket.io'
+import { initGame } from './controller/game'
 
 export default app => {
-  // app.use(express.json());
-  //
-  // app.get('/foo', (req, res) => {
-  //   res.json({msg: 'foo'});
-  // });
-  //
-  // app.post('/bar', (req, res) => {
-  //   res.json(req.body);
-  // });
+  const server = http.createServer(app)
+  const io = socketIO(server)
+  server.listen(4200)
+
+  io.sockets.on('connection', function(socket) {
+    initGame(io, socket)
+  })
 }

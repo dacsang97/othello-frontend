@@ -9,6 +9,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue)
 
+import SocketPlugin from './plugins/socket'
+Vue.use(SocketPlugin)
+
 Vue.config.productionTip = false
 
 new Vue({
