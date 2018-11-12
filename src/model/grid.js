@@ -61,6 +61,7 @@ export default class Grid {
 
   makeMove = (x, y, isOwnMove) => {
     console.log({ turn: this.isTurn })
+    console.log({ playerNum: this.playerNum })
     if (!this.isTurn && isOwnMove) return
     let moveColor = this.current
     console.log('move color: ' + moveColor)
