@@ -4,7 +4,7 @@
       <b-col>
         <div>
           <div class="float-right">
-            <b-button @click="createNewGame" :disabled="!!gameId">
+            <b-button v-b-modal.modalCreateGame :disabled="!!gameId">
               CREATE ROOM GAME
             </b-button>{{ ' ' }}
             <b-button v-b-modal.modal>JOIN EXISTS ROOM</b-button>
@@ -24,8 +24,12 @@
     </b-row>
     <b-row>
       <b-col md="4" v-for="room in filteredRooms" :key="room.id">
-        <b-card class="mb-4" @click="joinGame(room.id)">
-          <b-card-body>{{ room.id }}</b-card-body>
+        <b-card class="mb-4 card-room" @click="joinGame(room.id)">
+          <b-card-body>
+            <h1>{{ room.id }}</h1>
+            <p>Created by {{ room.players[0].name }}</p>
+            <p v-if="room.password">Password is required</p>
+          </b-card-body>
         </b-card>
       </b-col>
     </b-row>
@@ -40,6 +44,24 @@
         <b-form-group>
           <label>Enter room ID</label>
           <b-form-input v-model="roomId" />
+        </b-form-group>
+        <b-form-group>
+          <label>Enter room password</label>
+          <b-form-input v-model="roomPassword" placeholder="Optional"/>
+        </b-form-group>
+      </form>
+    </b-modal>
+    <b-modal
+      ref="modalCreate"
+      id="modalCreateGame"
+      title="Create Game"
+      @ok="handleOkCreate"
+      @shown="clearPassword"
+    >
+      <form @submit.stop.prevent="handleSubmitCreate">
+        <b-form-group>
+          <label>Room Password</label>
+          <b-form-input v-model="roomPassword" placeholder="Optional" />
         </b-form-group>
       </form>
     </b-modal>
@@ -57,6 +79,7 @@ export default {
       socketId: null,
       roomId: null,
       gameId: null,
+      roomPassword: null,
     }
   },
   computed: {
@@ -89,15 +112,18 @@ export default {
       player2: types.PLAYER_2,
     }),
     createNewGame() {
-      this.$io.createGame(this.name1)
+      this.$io.createGame({ name: this.name1, password: this.roomPassword })
       this.setPlayerNum(1)
     },
     joinGame(gameId) {
-      this.$io.joinGame({ gameId, name: this.name1 })
+      this.$io.joinGame({
+        gameId,
+        name: this.name1,
+        password: this.roomPassword,
+      })
       this.setPlayerNum(2)
     },
     connected(data) {
-      console.log(this.$io.socket)
       this.socketId = this.$io.socket.id
       this.updateRooms(data)
     },
@@ -117,6 +143,16 @@ export default {
     },
     clearId() {
       this.roomId = ''
+      this.roomPassword = ''
+    },
+    clearPassword() {
+      this.roomPassword = ''
+    },
+    handleOkCreate() {
+      this.handleSubmitCreate()
+    },
+    handleSubmitCreate() {
+      this.createNewGame()
     },
     handleOk(evt) {
       evt.preventDefault()
@@ -144,3 +180,10 @@ export default {
   },
 }
 </script>
+
+<style lang="stylus" scoped>
+.card-room {
+  cursor: pointer;
+}
+</style>
+

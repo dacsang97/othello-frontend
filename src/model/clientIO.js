@@ -10,8 +10,8 @@ export default class ClientIO {
     })
   }
 
-  createGame = name => {
-    this.socket.emit('hostCreateNewGame', { name })
+  createGame = ({ name, password }) => {
+    this.socket.emit('hostCreateNewGame', { name, password })
     console.log('SocketClient: onCreateGameClick sent.')
   }
 
