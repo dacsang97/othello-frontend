@@ -189,6 +189,8 @@ export default {
           const id = Number.parseInt(this.roomId)
           this.joinGame(id)
           this.$refs.modal.hide()
+          this.roomPassword = ''
+          this.roomId = ''
         } catch (e) {
           alert('The room ID invalid')
         }
