@@ -171,6 +171,7 @@ export default {
     },
     handleSubmitCreate() {
       this.createNewGame()
+      this.$refs.modalCreate.hide()
     },
     handleOk(evt) {
       evt.preventDefault()
@@ -187,6 +188,7 @@ export default {
         try {
           const id = Number.parseInt(this.roomId)
           this.joinGame(id)
+          this.$refs.modal.hide()
         } catch (e) {
           alert('The room ID invalid')
         }
