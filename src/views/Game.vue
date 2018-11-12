@@ -4,12 +4,14 @@
       <b-row>
         <b-col md="8" class="text-center">
           <div
-            class="game-tool d-flex mb-2 align-items-center justify-content-between"
+            class="game-tool d-flex mb-3 align-items-center justify-content-between"
           >
-            <div id="gameMessage">{{ message }}</div>
+            <div id="gameMessage" class="d-flex justify-centent-start">
+              <span class="name">System Message: </span> {{ message }}
+            </div>
             <div>
-              <b-button @click="surrender">Surrender</b-button>{{ ' ' }}
-              <b-button @click="exit">Exit Room</b-button>
+              <b-button @click="surrender" variant="danger">Surrender</b-button>{{ ' ' }}
+              <b-button @click="exit" variant="warning">Exit Room</b-button>
             </div>
           </div>
           <div class="game-area">
@@ -21,24 +23,23 @@
           </div>
         </b-col>
         <b-col md="4">
-          <b-row>
-            <b-col>
-              <div
-                :class="['card-user', 'white', { active: turn === 'white' }]"
-              >
-                <h5>{{ name1 }}</h5>
-                <span class="count">{{ white }}</span>
-              </div>
-            </b-col>
-            <b-col>
-              <div
-                :class="['card-user', 'black', { active: turn === 'black' }]"
-              >
-                <h5>{{ name2 }}</h5>
-                <span class="count">{{ black }}</span>
-              </div>
-            </b-col>
-          </b-row>
+          <div>
+            <div
+              :class="[
+                'card-user',
+                'white',
+                'mb-3',
+                { active: turn === 'white' },
+              ]"
+            >
+              <h5>{{ name1 }}</h5>
+              <span class="count">{{ white }}</span>
+            </div>
+            <div :class="['card-user', 'black', { active: turn === 'black' }]">
+              <h5>{{ name2 }}</h5>
+              <span class="count">{{ black }}</span>
+            </div>
+          </div>
         </b-col>
       </b-row>
     </b-container>
@@ -173,8 +174,9 @@ export default {
 <style lang="stylus" scoped>
 .card-user {
   background-color: #fbeed7;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 10px 15px;
+  box-shadow: 0 6px 15px rgba(36, 37, 38, 0.08);
+  border-radius: 16px;
   transition: all 0.25s ease-in;
 
   span {
@@ -212,9 +214,33 @@ export default {
   }
 }
 
+.game-tool {
+  background: #fafafa;
+  padding: 10px;
+  box-shadow: 0 6px 15px rgba(36, 37, 38, 0.08);
+  border-radius: 16px;
+
+  #gameMessage {
+    flex: 1;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+
+    .name {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+  }
+}
+
 .game-area {
   position: relative;
   background: #888;
+  box-shadow: 0 6px 15px rgba(36, 37, 38, 0.08);
+  border-radius: 16px;
 
   .message {
     opacity: 0;

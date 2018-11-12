@@ -6,8 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    name1: 'sang',
-    name2: 'sang1',
+    name1: '',
+    name2: '',
     playerNum: 0,
     gameId: '',
   },

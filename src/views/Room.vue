@@ -4,36 +4,53 @@
       <b-col>
         <div>
           <div class="float-right">
-            <b-button v-b-modal.modalCreateGame :disabled="!!gameId">
+            <b-button
+              variant="outline-secondary"
+              v-b-modal.modalCreateGame
+              :disabled="!!gameId"
+            >
               CREATE ROOM GAME
             </b-button>{{ ' ' }}
-            <b-button v-b-modal.modal>JOIN EXISTS ROOM</b-button>
+            <b-button variant="outline-secondary" v-b-modal.modal>JOIN EXISTS ROOM</b-button>
           </div>
-          <h1>Hello {{ name1 }}</h1>
+          <h3>Hello {{ name1 }}</h3>
         </div>
         <hr />
       </b-col>
     </b-row>
     <b-row v-if="gameId">
       <b-col>
-        <b-card>
-          <b-card-body>Your Game ID: {{ gameId }}</b-card-body>
-        </b-card>
+        <div class="your-game">
+          <b>Your Game ID:</b> {{ gameId }}
+        </div>
         <hr />
       </b-col>
     </b-row>
-    <b-row>
+    <b-row v-if="filteredRooms.length > 0">
       <b-col md="4" v-for="room in filteredRooms" :key="room.id">
-        <b-card
+        <div
           class="mb-4 card-room"
           @click="handleJoinRoom({ id: room.id, password: room.password })"
         >
-          <b-card-body>
-            <h1>{{ room.id }}</h1>
-            <p>Created by {{ room.players[0].name }}</p>
-            <p v-if="room.password">Password is required</p>
-          </b-card-body>
-        </b-card>
+          <div
+            class="room-id d-flex justify-content-between align-items-center"
+          >
+            {{ room.id }} <i v-if="room.password" class="fas fa-key"></i>
+          </div>
+          <div class="created mt-2 d-flex justify-content-end">
+            Created by <span class="author"> {{ room.players[0].name }}</span>
+          </div>
+        </div>
+      </b-col>
+    </b-row>
+    <b-row v-else>
+      <b-col class="text-center">
+        <h5>No room available to join. Create new room to play game.</h5>
+        <img
+          style="width: 250px"
+          src="https://nexus.leagueoflegends.com/wp-content/uploads/2018/02/balloons-03_ththqjulzqjay1n63ykc.png"
+        />
+
       </b-col>
     </b-row>
     <b-modal
@@ -191,8 +208,34 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.card-room, .your-game {
+  box-shadow: 0 6px 15px rgba(36, 37, 38, 0.08);
+  border-radius: 16px;
+  border: 0;
+  background: #fff;
+  padding: 20px;
+}
+
 .card-room {
   cursor: pointer;
+
+  .room-id {
+    border: 1px dashed #ccc;
+    padding: 5px 5px 5px 15px;
+    letter-spacing: 10px;
+  }
+
+  .created {
+    color: #888;
+
+    .author {
+      color: #111;
+      font-weight: bold;
+      margin-left: 5px;
+    }
+  }
+}
+
+.your-game {
 }
 </style>
-

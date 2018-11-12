@@ -31,6 +31,7 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () =>
         import(/* webpackChunkName: "room" */ './views/Room.vue'),
+      beforeEnter: requireAuth,
     },
     {
       path: '/game',
