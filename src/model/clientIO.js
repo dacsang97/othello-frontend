@@ -1,8 +1,9 @@
 import io from 'socket.io-client'
 
+const WS_URL = process.env.WS_URL || 'http://localhost:3000'
 export default class ClientIO {
   constructor() {
-    this.socket = io('http://localhost:4200')
+    this.socket = io(WS_URL)
 
     this.socket.on('errMess', ({ message }) => {
       alert(message)

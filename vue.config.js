@@ -1,8 +1,13 @@
+const webpack = require('webpack')
+
 module.exports = {
-  pluginOptions: {
-    express: {
-      shouldServeApp: true,
-      serverDir: './srv'
-    }
-  }
+  configureWebpack: {
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          WS_URL: JSON.stringify(process.env.WS_URL),
+        },
+      }),
+    ],
+  },
 }
