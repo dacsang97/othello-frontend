@@ -136,14 +136,17 @@ export default class Grid {
       this.gm.turn = ''
       const { white, black } = this.numColor()
       if (white > black) {
-        this.gm.message = 'White Wins!!!'
-        this.gm.win = 'w'
+        this.gm.handleGameOver({
+          win: 1,
+        })
       } else if (white < black) {
-        this.gm.message = 'Black Wins!!!'
-        this.gm.win = 'b'
+        this.gm.handleGameOver({
+          win: 2,
+        })
       } else {
-        this.gm.message = 'Tie!!!'
-        this.gm.win = 'bw'
+        this.gm.handleGameOver({
+          tie: true,
+        })
       }
       return true
     }

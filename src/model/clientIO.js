@@ -30,4 +30,8 @@ export default class ClientIO {
   exit = data => {
     this.socket.emit('exit', data)
   }
+
+  gameOver = data => {
+    this.socket.emit('gameOver', data)
+  }
 }

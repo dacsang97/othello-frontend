@@ -14,8 +14,9 @@
           </div>
           <div class="game-area">
             <canvas ref="game"></canvas>
-            <div :class="['message', { show: win }]">
-              <h1>{{ win }} won !!!</h1>
+            <div :class="['message', { show: win || tie }]">
+              <h1 v-if="win">{{ win }} won !!!</h1>
+              <h1 v-if="tie">Tie !!!</h1>
             </div>
           </div>
         </b-col>
@@ -69,6 +70,7 @@ export default {
       EventBus: new Vue(),
       white: 2,
       black: 2,
+      tie: false,
     }
   },
   computed: {
@@ -99,6 +101,10 @@ export default {
       this.$io.socket.on('newMove', this.newMove)
       this.$io.socket.on('surrender', ({ win }) => {
         this.win = win
+      })
+      this.$io.socket.on('gameOver', ({ win, tie }) => {
+        this.win = win
+        this.tie = tie
       })
       this.$io.socket.on('exit', () => {
         if (this.playerNum === 2) {
@@ -145,6 +151,18 @@ export default {
       } else {
         this.$io.exit({
           gameId: this.gameId,
+        })
+      }
+    },
+    handleGameOver(data) {
+      if (this.playerNum === 0) {
+        if (data.win === 2) this.win = this.name2
+        else if (data.win === 1) this.win = this.name1
+        else this.tie = true
+      } else {
+        this.$io.gameOver({
+          gameId: this.gameId,
+          ...data,
         })
       }
     },

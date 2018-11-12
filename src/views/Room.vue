@@ -24,7 +24,10 @@
     </b-row>
     <b-row>
       <b-col md="4" v-for="room in filteredRooms" :key="room.id">
-        <b-card class="mb-4 card-room" @click="joinGame(room.id)">
+        <b-card
+          class="mb-4 card-room"
+          @click="handleJoinRoom({ id: room.id, password: room.password })"
+        >
           <b-card-body>
             <h1>{{ room.id }}</h1>
             <p>Created by {{ room.players[0].name }}</p>
@@ -38,7 +41,6 @@
       id="modal"
       title="Join Game"
       @ok="handleOk"
-      @shown="clearId"
     >
       <form @submit.stop.prevent="handleSubmit">
         <b-form-group>
@@ -142,7 +144,6 @@ export default {
       this.$router.push('/game')
     },
     clearId() {
-      this.roomId = ''
       this.roomPassword = ''
     },
     clearPassword() {
@@ -176,6 +177,14 @@ export default {
     },
     inRoom() {
       alert('You are here !!!')
+    },
+    handleJoinRoom({ id, password }) {
+      if (!password) {
+        this.joinGame(id)
+      } else {
+        this.roomId = id
+        this.$refs.modal.show()
+      }
     },
   },
 }
